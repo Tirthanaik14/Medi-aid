@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Additional CSS for the history page */
+        .back-button {
+    display: flex;
+    align-items: center;
+    background: var(--primary);
+    color: white;  /* Changed text color to white */
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, transform 0.2s ease;
+    position: absolute; /* Position absolute for top right */
+    top: 20px; /* Adjust top space */
+    right: 20px; /* Adjust right space */
+}
+
+.back-button:hover {
+    background: #5a6f52;
+    transform: translateY(-2px);
+}
+
+
+        .history-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .history-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-table th {
+            background-color: #698B69;
+            color: white;
+            font-weight: 500;
+        }
+
+        .history-table tr:hover {
+            background-color: #f8f8f5;
+        }
+
+        .history-table td {
+            color: #444b6e;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #8a919e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .history-table th,
+            .history-table td {
+                padding: 8px;
+            }
+
+            .history-table th {
+                font-size: 12px;
+            }
+
+            .history-table td {
+                font-size: 12px;
+            }
+
+            .history-table-container {
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .history-table th,
+            .history-table td {
+                padding: 6px;
+            }
+
+            .history-table th {
+                font-size: 10px;
+            }
+
+            .history-table td {
+                font-size: 10px;
+            }
+
+            .back-button {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Medical History</h1>
+        <a href="{{ url_for('index') }}">
+            <button class="back-button" onclick="goToHomepage()">
+                <i class="fas fa-arrow-left"></i> Back to Homepage
+            </button>
+        </a>
+    </header>
+
+    <main class="history-container">
+        {% if history_data %}
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Zip Code</th>
+                            <th>Emergency Name</th>
+                            <th>Emergency Phone</th>
+                            <th>Emergency Relation</th>
+                            <th>Medical Conditions</th>
+                            <th>Medical History</th>
+                            <th>Blood Type</th>
+                            <th>Location Services</th>
+                            <th>Notifications</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in history_data %}
+                            <tr>
+                                <td>{{ data.first_name }}</td>
+                                <td>{{ data.last_name }}</td>
+                                <td>{{ data.email }}</td>
+                                <td>{{ data.phone }}</td>
+                                <td>{{ data.dob }}</td>
+                                <td>{{ data.gender }}</td>
+                                <td>{{ data.address }}</td>
+                                <td>{{ data.city }}</td>
+                                <td>{{ data.state }}</td>
+                                <td>{{ data.zip_code }}</td>
+                                <td>{{ data.emergency_name }}</td>
+                                <td>{{ data.emergency_phone }}</td>
+                                <td>{{ data.emergency_relation }}</td>
+                                <td>{{ data.medical_conditions }}</td>
+                                <td>{{ data.medical_history }}</td>
+                                <td>{{ data.blood_type }}</td>
+                                <td>{{ "Enabled" if data.location_services else "Disabled" }}</td>
+                                <td>{{ "Enabled" if data.notifications else "Disabled" }}</td>
+                                <td>{{ data.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="no-data">No medical history data available.</p>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 MediAid </p>
+    </footer>
+</body>
+</html>

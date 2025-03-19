@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAid - Emergency Medical Assistance Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-icon">+</div>
+                MediAid
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('first') }}">Learn First-Aid</a>
+                <a href="{{ url_for('account') }}">Accounts</a>
+                <a href="{{ url_for('history_page') }}">Medical History</a>
+                <a href="#how-it-works">How It Works</a> <!-- Add this line -->
+            </div>
+        </nav>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Medical assistance that feels like <span>human care</span></h1>
+                <p class="hero-subtitle">MediAid connects you with nearby medical professionals, pharmacies, and life-saving guides during emergencies. We're here when you need help the most.</p>
+                <div class="hero-cta">
+                    <a href="{{ url_for('maps') }}">
+                        <button class="cta-button">Find Help Now</button>
+                    </a>
+                    
+                    <a href="{{ url_for('chatbot') }}">
+                        <button class="secondary-button">ChatBot</button>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-animation">
+                <div class="blob"></div>
+                <div class="blob blob-2"></div>
+            </div>
+        </section>
+    </div>
+    
+    <section class="features-section">
+        <div class="container">
+            <div class="title-container">
+                <h2 class="section-title">Care at Your Fingertips</h2>
+                <p class="section-subtitle">MediAid provides comprehensive emergency medical resources when and where you need them most.</p>
+            </div>
+            <div class="highlights">
+                <div class="highlight-card">
+                    <div class="highlight-icon">👨‍⚕</div>
+                    <h3 class="highlight-title">Medical Professionals</h3>
+                    <p class="highlight-description">Connect with nearby doctors, nurses, and paramedics who can provide immediate guidance or assistance during emergencies.</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">💊</div>
+                    <h3 class="highlight-title">Pharmacy Locator</h3>
+                    <p class="highlight-description">Find open pharmacies near you with the medications you need, even during off-hours or weekends.</p>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">📚</div>
+                    <h3 class="highlight-title">First Aid Guidance</h3>
+                    <p class="highlight-description">Access easy-to-follow first aid guides with step-by-step instructions for various emergency situations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Add an ID to the How It Works section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="title-container">
+                <h2 class="section-title">How MediAid Works</h2>
+                <p class="section-subtitle">Your health companion in just a few simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Create Account</h3>
+                    <p class="step-description">Register with your details to access all services</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Share Location</h3>
+                    <p class="step-description">Enable location services to find help nearest to you</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Describe Situation</h3>
+                    <p class="step-description">Tell us what's happening so we can provide the right assistance</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Receive Care</h3>
+                    <p class="step-description">Get the guidance or assistance you need for your situation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <a href="tel:108">
+        <div class="sos-button">SOS</div>
+    </a>
+    
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-title">MediAid</h3>
+                    <p style="opacity: 0.8; line-height: 1.6;">Emergency medical assistance platform connecting people with care when they need it most.</p>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Services</h3>
+                    <div class="footer-links">
+                        <a href="#">Emergency Assistance</a>
+                        <a href="#">Find Pharmacies</a>
+                        <a href="#">Medical Professionals</a>
+                        <a href="#">First Aid Guides</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Company</h3>
+                    <div class="footer-links">
+                        <a href="#">About Us</a>
+                        <a href="#">How It Works</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Legal</h3>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                        <a href="#">For Medical Professionals</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 MediAid. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Create floating elements
+        const createFloatingElements = () => {
+            const container = document.querySelector('.floating-elements');
+            
+            if (!container) {
+                const elementsContainer = document.createElement('div');
+                elementsContainer.classList.add('floating-elements');
+                document.body.appendChild(elementsContainer);
+                
+                for (let i = 0; i < 20; i++) {
+                    const element = document.createElement('div');
+                    element.classList.add('floating-element');
+                    
+                    // Random size
+                    const size = Math.random() * 60 + 10;
+                    element.style.width = `${size}px`;
+                    element.style.height = `${size}px`;
+                    
+                    // Random position
+                    element.style.left = `${Math.random() * 100}%`;
+                    element.style.top = `${Math.random() * 100}%`;
+                    
+                    // Random opacity
+                    element.style.opacity = Math.random() * 0.2 + 0.1;
+                    
+                    elementsContainer.appendChild(element);
+                    
+                    // Animation
+                    animateElement(element);
+                }
+            }
+        };
+        
+        function animateElement(element) {
+            const duration = Math.random() * 60 + 30;
+            const xPos = Math.random() * 100;
+            const yPos = Math.random() * 100;
+            
+            element.style.transition = `all ${duration}s linear`;
+            element.style.left = `${xPos}%`;
+            element.style.top = `${yPos}%`;
+            
+            setTimeout(() => {
+                animateElement(element);
+            }, duration * 1000);
+        }
+        
+        // Emergency button
+        const emergencyBtn = document.getElementById('emergency-btn');
+        emergencyBtn.addEventListener('click', () => {
+            alert('Emergency assistance feature activated! In a real app, this would connect you with nearby medical help.');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Initialize
+        createFloatingElements();
+    </script>
+</body>
+</html>

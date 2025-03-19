@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Locations</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .back-button {
+            display: flex;
+            align-items: center;
+            background: #2b8a3e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .back-button:hover {
+            background: #237531;
+            transform: translateY(-2px);
+        }
+        .back-button i {
+            margin-right: 8px;
+        }
+        .page-title {
+            flex-grow: 1;
+        }
+        .page-title h2 {
+            margin: 0;
+        }
+        .page-title p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        main {
+            padding: 0 20px 20px;
+        }
+        #map {
+            width: 100%;
+            height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .shiny-marker {
+            animation: glow 1.2s infinite alternate ease-in-out;
+        }
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 5px red); opacity: 0.7; }
+            50% { filter: drop-shadow(0 0 15px red); opacity: 1; }
+            100% { filter: drop-shadow(0 0 5px red); opacity: 0.7; }
+        }
+
+        /* Filter Icon */
+        .filter-icon {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .filter-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Filter Popup */
+        .filter-popup {
+            display: none;
+            position: absolute;
+            top: 140px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .filter-popup h3 {
+            margin: 0 0 15px;
+            font-size: 18px;
+            color: #2b8a3e;
+        }
+        .filter-popup label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .filter-popup input[type="range"],
+        .filter-popup select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .filter-popup input[type="range"] {
+            padding: 0;
+        }
+        .filter-popup button {
+            width: 100%;
+            padding: 10px;
+            background: #2b8a3e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .filter-popup button:hover {
+            background: #237531;
+        }
+        .call-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #2b8a3e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+        .call-button:hover {
+            background: #237531;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('index') }}">
+            <button class="back-button" onclick="goToHomepage()">
+                <i class="fas fa-arrow-left"></i> Back to Homepage
+            </button>
+        </a>
+        <div class="page-title">
+            <h2>Emergency Locations</h2>
+            <p>Find the nearest hospitals and pharmacies.</p>
+        </div>
+    </header>
+    
+    <main>
+        <div id="map"></div>
+
+        <!-- Filter Icon -->
+        <div class="filter-icon" onclick="toggleFilterPopup()">
+            <i class="fas fa-filter"></i>
+        </div>
+
+        <!-- Filter Popup -->
+        <div class="filter-popup" id="filterPopup">
+            <h3>Filter Options</h3>
+            <label for="distance">Max Distance (km): <span id="distance-value">10</span></label>
+            <input type="range" id="distance" min="1" max="50" value="10" oninput="updateDistance()">
+
+            <label for="traffic">Consider Traffic:</label>
+            <select id="traffic">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="beds">Bed Availability:</label>
+            <select id="beds">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="doctors">Doctor Availability:</label>
+            <select id="doctors">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="ambulance">Ambulance Services:</label>
+            <select id="ambulance">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label for="rating">Minimum Rating:</label>
+            <select id="rating">
+                <option value="any">Any</option>
+                <option value="4">4+ Stars</option>
+                <option value="3">3+ Stars</option>
+                <option value="2">2+ Stars</option>
+            </select>
+
+            <button onclick="applyFilters()">Apply Filters</button>
+        </div>
+    </main>
+
+    <script>
+        function goToHomepage() {
+            window.location.href = "index.html";
+        }
+        
+        var map = L.map('map').setView([0, 0], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var hospitalIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
+        });
+
+        var pharmacyIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
+        });
+
+        var userIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
+        });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLat = position.coords.latitude;
+                var userLon = position.coords.longitude;
+
+                map.setView([userLat, userLon], 15);
+                L.marker([userLat, userLon], {icon: userIcon}).addTo(map)
+                    .bindPopup("Your Location")
+                    .openPopup();
+
+                var overpassUrl = 'https://overpass-api.de/api/interpreter';
+                var overpassQuery = `
+                    [out:json];
+                    (
+                        node["amenity"="hospital"](around:5000,${userLat},${userLon});
+                        node["amenity"="pharmacy"](around:5000,${userLat},${userLon});
+                    );
+                    out center;
+                `;
+
+                fetch(overpassUrl, {
+                    method: 'POST',
+                    body: 'data=' + encodeURIComponent(overpassQuery)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let nearestHospital = null;
+                    let minDistance = Infinity;
+                    let nearestHospitalMarker = null;
+
+                    data.elements.forEach(element => {
+                        var markerLat = element.lat;
+                        var markerLon = element.lon;
+                        if (!markerLat || !markerLon) return;
+
+                        var type = element.tags.amenity;
+                        var icon = (type === "hospital") ? hospitalIcon : pharmacyIcon;
+                        var marker = L.marker([markerLat, markerLon], {icon: icon}).addTo(map);
+
+                        var placeName = element.tags.name || (type === "hospital" ? "Hospital" : "Pharmacy");
+                        marker.bindPopup(`<strong>${placeName}</strong><br>
+                                          <button class="call-button">Call Now</button>`);
+
+                        if (type === "hospital") {
+                            var distance = Math.sqrt(Math.pow(markerLat - userLat, 2) + Math.pow(markerLon - userLon, 2));
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                nearestHospital = marker;
+                            }
+                        }
+                    });
+
+                    if (nearestHospital) {
+                        let nearestHospitalElement = nearestHospital._icon;
+                        nearestHospitalElement.classList.add("shiny-marker");
+                    } else {
+                        alert("No hospitals found nearby.");
+                    }
+                })
+                .catch(error => alert("Failed to load emergency locations."));
+            }, () => {
+                alert("Location access denied.");
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+
+        // Filter Functions
+        function toggleFilterPopup() {
+            var popup = document.getElementById("filterPopup");
+            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        }
+
+        function updateDistance() {
+            document.getElementById("distance-value").innerText = document.getElementById("distance").value;
+        }
+
+        function applyFilters() {
+            var distance = document.getElementById("distance").value;
+            var traffic = document.getElementById("traffic").value;
+            var beds = document.getElementById("beds").value;
+            var doctors = document.getElementById("doctors").value;
+            var ambulance = document.getElementById("ambulance").value;
+            var rating = document.getElementById("rating").value;
+
+            alert(`Filters Applied:\nDistance: ${distance} km\nTraffic: ${traffic}\nBeds: ${beds}\nDoctors: ${doctors}\nAmbulance: ${ambulance}\nRating: ${rating}`);
+            toggleFilterPopup();
+        }
+        function callEmergency() {
+            window.location.href = "tel:112";
+        }
+    </script>
+</body>
+</html>
+        

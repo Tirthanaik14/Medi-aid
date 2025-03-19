@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us – MediAid</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+    
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+    <div class="container">
+        <h1>MediAid</h1>
+        <nav>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('first') }}">Learn First-Aid</a>
+                <a href="{{ url_for('account') }}">Accounts</a>
+               
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h2>About Us</h2>
+        <p>Your trusted emergency medical assistance platform.</p>
+       
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="about-container">
+    <h2>👩‍💻 Our Team</h2>
+    <div class="team">
+        <div class="member">
+            <h3>Roshani </h3>
+            <p>Frontend Developer</p>
+            <p>7039312890</p>
+        </div>
+        <div class="member">
+            <h3>Utkarsha</h3>
+            <p>Frontend Developer</p>
+            <p>6789455408</p>
+        </div>
+        <div class="member">
+            <h3>Tirtha</h3>
+            <p>Backend Developer</p>
+            <p>5609834345</p>
+        </div>
+        <div class="member">
+            <h3>Mrinmayee</h3>
+            <p>Backend Developer</p>
+            <p>898768545</p>
+        </div>
+    </div>
+</section>
+
+<!-- Project Section -->
+<section class="project-info">
+    <div class="container">
+        <h2>🌐 Our Project</h2>
+        <p><strong>MediAid</strong> is a platform providing instant access to hospitals, 
+        pharmacies, and first-aid resources, ensuring **timely help during critical situations**.</p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>© 2025 MediAid | Created by Roshani, Utkarsha, Tirtha & Mrinmayee</p>
+        <p>Contact us at: <a href="mailto:mediAid@support.com">mediAid@support.com</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
